@@ -1,0 +1,45 @@
+---
+title: "Open Interest"
+description: "Retrieve open interest totals for market outcome tokens."
+---
+
+`client.data.misc.getOpenInterest` returns open interest metrics for one or more markets. When no
+filter is supplied, the API also includes a `GLOBAL` aggregate.
+
+## Request
+
+```ts
+const entries = await client.data.misc.getOpenInterest(params);
+```
+
+### Parameters
+
+| Name     | Type       | Required | Notes                                 |
+| -------- | ---------- | -------- | ------------------------------------- |
+| `market` | `string[]` |          | Optional condition IDs (0x + 64 hex). |
+
+## Response
+
+```ts
+type OpenInterest = {
+  market: string; // condition ID or "GLOBAL"
+  value: number;
+};
+```
+
+## Usage example
+
+```ts
+const entries = await client.data.misc.getOpenInterest({
+  market: ["0x49252732f0bfe99f2ab09366230607eb9562fa6a56557a10ddcd7dd2198cf588"],
+});
+
+entries.forEach((entry) => {
+  console.log(`${entry.market}: ${entry.value}`);
+});
+```
+
+## Failure modes
+
+- Condition IDs must be 0x-prefixed 64-hex strings; invalid ones trigger validation errors.
+- HTTP/network failures propagate per the [architecture contract](/architecture#error-handling-contract).

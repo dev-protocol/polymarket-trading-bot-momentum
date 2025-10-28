@@ -1,0 +1,50 @@
+---
+title: "Overview"
+description: "Explore positions, trades, activity, holders, and other classic Polymarket data endpoints."
+---
+
+The `client.data` namespace mirrors Polymarket’s classic data service. It is split into two
+segments:
+
+- **Core** — portfolio-focused endpoints (`client.data.core.*`).
+- **Misc** — supporting analytics (`client.data.misc.*`).
+
+<Info>
+  **Guaranteed shape:** Every request and response is validated with Zod before data reaches your
+  application. Schema mismatches surface immediately with descriptive errors.
+</Info>
+<Columns cols={2}>
+  <Card title="Positions" icon="wallet" href="/data/positions">
+    Token balances, cash/percent PnL, redeemable/mergeable flags.
+  </Card>
+  <Card title="Trades" icon="scale-balanced" href="/data/trades">
+    Historical fills with filters for user, market IDs, and trade side.
+  </Card>
+  <Card title="Activity" icon="list" href="/data/activity">
+    Chronological feed of trades, rewards, splits, merges, and conversions.
+  </Card>
+  <Card title="Holders" icon="users" href="/data/holders">
+    Outcome-level holder breakdowns with profile metadata.
+  </Card>
+  <Card title="Portfolio Value" icon="coins" href="/data/value">
+    Aggregate USDC exposure per wallet, with optional market filtering.
+  </Card>
+  <Card title="Open Interest" icon="chart-column" href="/data/open-interest">
+    Token-level open interest snapshots and global aggregates.
+  </Card>
+  <Card title="Live Volume" icon="activity" href="/data/live-volume">
+    Real-time volume for individual events, including per-market totals.
+  </Card>
+  <Card title="Traded Markets" icon="repeat" href="/data/traded">
+    Count how many markets a wallet has traded historically.
+  </Card>
+</Columns>
+
+---
+
+## Version compatibility
+
+The SDK targets `https://data-api.polymarket.com`. When the upstream API evolves, validation errors
+will highlight mismatched fields. Capture the new payload and submit a PR to keep schemas aligned.
+
+---

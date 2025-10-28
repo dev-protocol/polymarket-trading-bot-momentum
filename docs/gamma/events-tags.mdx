@@ -1,0 +1,49 @@
+---
+title: "Event Tags"
+description: "Retrieve tag metadata for an event via gamma.events.getEventTags."
+---
+
+`client.gamma.events.getEventTags` lists the tags associated with an event.
+
+## Request
+
+```ts
+const tags = await client.gamma.events.getEventTags(id);
+```
+
+### Parameters
+
+| Name | Type           | Required | Notes     |
+| ---- | -------------- | -------- | --------- |
+| `id` | `number` (≥ 0) | ✅       | Event ID. |
+
+## Response
+
+```ts
+type EventTag = {
+  id: string;
+  label: string | null;
+  slug: string | null;
+  forceShow: boolean | null;
+  publishedAt: string | null;
+  createdBy: number | null;
+  updatedBy: number | null;
+  createdAt: string | null;
+  updatedAt: string | null;
+  forceHide: boolean | null;
+  isCarousel: boolean | null;
+};
+```
+
+## Usage example
+
+```ts
+const tags = await client.gamma.events.getEventTags(35723);
+
+console.log(tags.map((tag) => tag.slug));
+```
+
+## Failure modes
+
+- `id` must be numeric.
+- HTTP/network failures propagate per the [architecture contract](/architecture#error-handling-contract).

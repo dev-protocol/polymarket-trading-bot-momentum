@@ -1,0 +1,77 @@
+---
+title: "Activity"
+description: "Retrieve a chronological feed of trades, rewards, splits, merges, and conversions."
+---
+
+`client.data.core.getActivity` delivers a time-ordered view of wallet events. It’s perfect for
+portfolio dashboards, notification feeds, and audit tooling.
+
+## Request
+
+```ts
+const feed = await client.data.core.getActivity(params);
+```
+
+### Parameters
+
+| Name            | Type                    | Required | Default | Notes                                                                  |
+| --------------- | ----------------------- | -------- | ------- | ---------------------------------------------------------------------- | ------------------ | --------------- |
+| `user`          | `string` (address)      | ✅       | –       | Wallet or proxy address.                                               |
+| `limit`         | `number` (0–500)        |          | `100`   | Page size.                                                             |
+| `offset`        | `number` (0–10000)      |          | `0`     | Page offset.                                                           |
+| `market`        | `string[]`              |          | –       | Condition IDs (mutually exclusive with `eventId`).                     |
+| `eventId`       | `number[]`              |          | –       | Event IDs (mutually exclusive with `market`).                          |
+| `type`          | array of activity enums |          | –       | Filter by `TRADE`, `REDEEM`, `MERGE`, `SPLIT`, `REWARD`, `CONVERSION`. |
+| `start`         | `number` (≥ 0)          |          | –       | Unix timestamp lower bound.                                            |
+| `end`           | `number` (≥ 0)          |          | –       | Unix timestamp upper bound.                                            |
+| `sortBy`        | `"TIMESTAMP"            | "TOKENS" | "CASH"` |                                                                        | `"TIMESTAMP"`      | Sorting metric. |
+| `sortDirection` | `"ASC"                  | "DESC"`  |         | `"DESC"`                                                               | Sorting order.     |
+| `side`          | `"BUY"                  | "SELL"`  |         | –                                                                      | Trade side filter. |
+
+## Response
+
+```ts
+type Activity = {
+  proxyWallet: string;
+  timestamp: number;
+  conditionId: string;
+  type: "TRADE" | "SPLIT" | "MERGE" | "REDEEM" | "REWARD" | "CONVERSION";
+  size: number;
+  usdcSize: number;
+  transactionHash: string;
+  price: number;
+  asset: string;
+  side?: "BUY" | "SELL";
+  outcomeIndex: number;
+  title: string;
+  slug: string;
+  icon: string;
+  eventSlug: string;
+  outcome: string;
+  name: string;
+  pseudonym: string;
+  bio: string;
+  profileImage: string;
+  profileImageOptimized: string;
+};
+```
+
+## Usage example
+
+```ts
+const feed = await client.data.core.getActivity({
+  user: "0x56687bf447db6ffa42ffe2204a05edaa20f55839",
+  type: ["TRADE", "REDEEM"],
+  limit: 25,
+});
+
+feed.forEach((entry) => {
+  console.log(`${entry.type} at ${new Date(entry.timestamp * 1000).toISOString()}`);
+});
+```
+
+## Failure modes
+
+- Missing `user` → validation error.
+- Conflicting filters → validation error referencing both fields.
+- HTTP/network failures propagate per the [architecture contract](/architecture#error-handling-contract).

@@ -1,0 +1,46 @@
+---
+title: "Portfolio Value"
+description: "Aggregate the total position value for a wallet across optional markets."
+---
+
+`client.data.core.getValue` aggregates a wallet’s exposure in USDC across all or selected markets.
+
+## Request
+
+```ts
+const summary = await client.data.core.getValue(params);
+```
+
+### Parameters
+
+| Name     | Type               | Required | Notes                                            |
+| -------- | ------------------ | -------- | ------------------------------------------------ |
+| `user`   | `string` (address) | ✅       | Wallet or proxy address.                         |
+| `market` | `string[]`         |          | Optional condition IDs to scope the calculation. |
+
+## Response
+
+```ts
+type UserValue = {
+  user: string;
+  value: number;
+};
+```
+
+The API returns an array, even when querying a single user/market combination.
+
+## Usage example
+
+```ts
+const [summary] = await client.data.core.getValue({
+  user: "0x56687bf447db6ffa42ffe2204a05edaa20f55839",
+});
+
+console.log(`Total position value: ${summary.value.toFixed(2)} USDC`);
+```
+
+## Failure modes
+
+- Missing `user` → validation error.
+- Invalid condition ID → validation error referencing the offending index.
+- HTTP/network failures propagate per the [architecture contract](/architecture#error-handling-contract).

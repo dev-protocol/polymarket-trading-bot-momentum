@@ -1,0 +1,42 @@
+---
+title: "Traded Markets"
+description: "Count how many markets a wallet has interacted with historically."
+---
+
+`client.data.misc.getTraded` reports the number of markets in which a wallet has executed trades.
+
+## Request
+
+```ts
+const traded = await client.data.misc.getTraded({ user });
+```
+
+### Parameters
+
+| Name   | Type               | Required | Notes                    |
+| ------ | ------------------ | -------- | ------------------------ |
+| `user` | `string` (address) | ✅       | Wallet or proxy address. |
+
+## Response
+
+```ts
+{
+  user: string;
+  traded: number;
+}
+```
+
+## Usage example
+
+```ts
+const traded = await client.data.misc.getTraded({
+  user: "0x56687bf447db6ffa42ffe2204a05edaa20f55839",
+});
+
+console.log(`${traded.user} has traded ${traded.traded} markets`);
+```
+
+## Failure modes
+
+- Missing `user` → validation error.
+- HTTP/network failures propagate per the [architecture contract](/architecture#error-handling-contract).

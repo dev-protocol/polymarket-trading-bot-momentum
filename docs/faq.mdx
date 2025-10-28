@@ -1,0 +1,57 @@
+---
+title: "FAQ"
+description: "Frequently asked questions about the polymarket-data SDK."
+---
+
+<Accordion title="Is this an official Polymarket SDK?">
+  No. **polymarket-data** is community-maintained and not endorsed by the Polymarket team. It
+  targets public endpoints published by Polymarket. Confirm contractual or compliance requirements
+  with Polymarket before deploying to production.
+</Accordion>
+
+<Accordion title="Do I need an API key?">
+  Not for the endpoints currently implemented. If Polymarket introduces authentication, the
+  community will update the SDK accordingly.
+</Accordion>
+
+<Accordion title="Which environments are supported?">
+- Node.js 18+ (native `fetch`)
+- Serverless runtimes that support ESM modules
+- Browser environments, provided CORS allows the target endpoints
+
+Supply a custom `fetch` implementation if your runtime does not expose one.
+
+</Accordion>
+
+<Accordion title="How are responses validated?">
+  Every request and response flows through Zod schemas. Unexpected payloads throw descriptive
+  errors, helping you spot upstream changes immediately.
+</Accordion>
+
+<Accordion title="What happens if Polymarket changes an endpoint?">
+Zod validation will fail with a message like:
+
+```
+Invalid response for gamma.markets.listMarkets: …
+```
+
+Capture the new payload, open an issue, and submit a PR updating the schema. Include unit/integration
+tests to lock the change in place.
+
+</Accordion>
+
+<Accordion title="How can I contribute?">
+
+1. Fork the repository.
+2. Model the endpoint in Zod.
+3. Implement the method and export types.
+4. Add unit/integration tests.
+5. Run lint, build, and test scripts.
+6. Submit a detailed pull request.
+
+</Accordion>
+
+<Accordion title="Are there rate limits?">
+  Polymarket’s public APIs may enforce rate limits. Cache responses where possible and avoid
+  excessive polling. Consult Polymarket’s official docs for the latest policies.
+</Accordion>

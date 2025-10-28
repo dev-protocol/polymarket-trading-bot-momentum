@@ -1,0 +1,76 @@
+---
+title: "Trades"
+description: "Fetch trade fills with filtering by user, market, side, and thresholds."
+---
+
+`client.data.core.getTrades` returns historical fills across markets. Combine filters to analyse
+liquidity, user behaviour, or market conditions.
+
+## Request
+
+```ts
+const trades = await client.data.core.getTrades(params);
+```
+
+### Parameters
+
+| Name           | Type                 | Required | Default | Notes                                              |
+| -------------- | -------------------- | -------- | ------- | -------------------------------------------------- |
+| `limit`        | `number` (0–10000)   |          | `100`   | Page size.                                         |
+| `offset`       | `number` (0–10000)   |          | `0`     | Page offset.                                       |
+| `takerOnly`    | `boolean`            |          | `true`  | Set to `false` to include maker fills.             |
+| `filterType`   | `"CASH" \| "TOKENS"` |          | –       | Must be provided with `filterAmount`.              |
+| `filterAmount` | `number` (≥ 0)       |          | –       | Minimum cash/tokens threshold.                     |
+| `market`       | `string[]`           |          | –       | Condition IDs (mutually exclusive with `eventId`). |
+| `eventId`      | `number[]`           |          | –       | Event IDs (mutually exclusive with `market`).      |
+| `user`         | `string` (address)   |          | –       | Filter by participant.                             |
+| `side`         | `"BUY" \| "SELL"`    |          | –       | Filter by trade direction.                         |
+
+> ⚠️ Provide **both** `filterType` and `filterAmount` or neither. Mixing them triggers a validation
+> error. Likewise, `market` and `eventId` cannot be combined.
+
+## Response
+
+```ts
+type Trade = {
+  proxyWallet: string;
+  side: "BUY" | "SELL";
+  asset: string;
+  conditionId: string;
+  size: number;
+  price: number;
+  timestamp: number;
+  title: string;
+  slug: string;
+  icon: string;
+  eventSlug: string;
+  outcome: string;
+  outcomeIndex: number;
+  name: string;
+  pseudonym: string;
+  bio: string;
+  profileImage: string;
+  profileImageOptimized: string;
+  transactionHash: string;
+};
+```
+
+## Usage example
+
+```ts
+const trades = await client.data.core.getTrades({
+  user: "0x56687bf447db6ffa42ffe2204a05edaa20f55839",
+  side: "BUY",
+  limit: 20,
+});
+
+const averagePrice =
+  trades.reduce((total, trade) => total + trade.price, 0) / Math.max(trades.length, 1);
+```
+
+## Failure modes
+
+- Missing paired filters → validation error referencing both fields.
+- Conflicting `market`/`eventId` → validation error.
+- HTTP failure → `HttpError` with parsed body.
+- Network failure → `Error("Network error: …")` with original cause.

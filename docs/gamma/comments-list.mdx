@@ -1,0 +1,85 @@
+---
+title: "List Comments"
+description: "Retrieve event or series comments with optional filters via gamma.comments.listComments."
+---
+
+`client.gamma.comments.listComments` fetches conversations attached to events, series, or markets.
+It supports pagination, holder-only views, and optional position visibility.
+
+## Request
+
+```ts
+const comments = await client.gamma.comments.listComments(params);
+```
+
+### Parameters
+
+| Name                 | Type                              | Required | Notes                                    |
+| -------------------- | --------------------------------- | -------- | ---------------------------------------- |
+| `limit`              | `number` (≥ 0)                    |          | Page size.                               |
+| `offset`             | `number` (≥ 0)                    |          | Page offset.                             |
+| `order`              | `string`                          |          | Sorting expression.                      |
+| `ascending`          | `boolean`                         |          | Sort direction.                          |
+| `parent_entity_type` | `"Event" \| "Series" \| "market"` |          | Filters conversation root.               |
+| `parent_entity_id`   | `number`                          |          | Use with `parent_entity_type`.           |
+| `get_positions`      | `boolean`                         |          | Include position arrays inside profiles. |
+| `holders_only`       | `boolean`                         |          | Restrict to holders-only comments.       |
+
+## Response
+
+```ts
+type Comment = {
+  id: string;
+  body: string | null;
+  parentEntityType: string | null;
+  parentEntityID: number | null;
+  parentCommentID: string | null;
+  userAddress: string | null;
+  replyAddress: string | null;
+  createdAt: string | null;
+  updatedAt: string | null;
+  profile?: {
+    name: string | null;
+    pseudonym: string | null;
+    displayUsernamePublic: boolean | null;
+    bio: string | null;
+    isMod: boolean | null;
+    isCreator: boolean | null;
+    proxyWallet: string | null;
+    baseAddress: string | null;
+    profileImage: string | null;
+    profileImageOptimized?: Record<string, unknown> | null;
+    positions?: Array<{ tokenId: string | null; positionSize: string | null }> | null;
+  };
+  reactions?: Array<{
+    id: string | null;
+    commentID: number | null;
+    reactionType: string | null;
+    icon: string | null;
+    userAddress: string | null;
+    createdAt: string | null;
+    profile?: Comment["profile"];
+  }> | null;
+  reportCount: number | null;
+  reactionCount: number | null;
+};
+```
+
+## Usage example
+
+```ts
+const comments = await client.gamma.comments.listComments({
+  parent_entity_type: "Event",
+  parent_entity_id: 35723,
+  limit: 20,
+  get_positions: true,
+});
+
+console.log(comments.map((comment) => comment.body));
+```
+
+## Failure modes
+
+- `parent_entity_type` must be `Event`, `Series`, or `market`.
+- Negative pagination values → validation error.
+- HTTP/network failures propagate per the [architecture contract](/architecture#error-handling-contract).

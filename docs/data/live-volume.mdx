@@ -1,0 +1,45 @@
+---
+title: "Live Volume"
+description: "Retrieve live traded volume for a specific event, including per-market totals."
+---
+
+`client.data.misc.getLiveVolume` provides real-time volume for a given event. Each entry includes the
+overall total plus per-market amounts.
+
+## Request
+
+```ts
+const [snapshot] = await client.data.misc.getLiveVolume({ id });
+```
+
+### Parameters
+
+| Name | Type           | Required | Notes                |
+| ---- | -------------- | -------- | -------------------- |
+| `id` | `number` (≥ 1) | ✅       | Polymarket event ID. |
+
+## Response
+
+```ts
+type LiveVolume = {
+  total: number;
+  markets: Array<{
+    market: string;
+    value: number;
+  }>;
+};
+```
+
+## Usage example
+
+```ts
+const [snapshot] = await client.data.misc.getLiveVolume({ id: 35723 });
+
+console.log(`Total volume: ${snapshot.total}`);
+snapshot.markets.forEach((entry) => console.log(`${entry.market}: ${entry.value}`));
+```
+
+## Failure modes
+
+- `id` must be a positive integer.
+- HTTP/network failures propagate per the [architecture contract](/architecture#error-handling-contract).

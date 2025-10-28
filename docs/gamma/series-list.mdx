@@ -1,0 +1,46 @@
+---
+title: "List Series"
+description: "Browse Polymarket series collections with optional filters via gamma.series.listSeries."
+---
+
+`client.gamma.series.listSeries` returns series metadata, including nested events, categories, tags,
+and optional chat data.
+
+## Request
+
+```ts
+const series = await client.gamma.series.listSeries(params);
+```
+
+### Parameters
+
+| Name                | Type           | Required | Default | Notes                                 |
+| ------------------- | -------------- | -------- | ------- | ------------------------------------- |
+| `limit`             | `number` (≥ 0) |          | –       | Page size.                            |
+| `offset`            | `number` (≥ 0) |          | –       | Page offset.                          |
+| `order`             | `string`       |          | –       | Sort expression.                      |
+| `ascending`         | `boolean`      |          | –       | Sort direction.                       |
+| `slug`              | `string[]`     |          | –       | Filter by series slug(s).             |
+| `categories_ids`    | `number[]`     |          | –       | Filter by category IDs.               |
+| `categories_labels` | `string[]`     |          | –       | Filter by category labels.            |
+| `closed`            | `boolean`      |          | –       | Filter by closed status.              |
+| `include_chat`      | `boolean`      |          | –       | Include chat metadata.                |
+| `recurrence`        | `string`       |          | –       | Filter by recurrence (e.g., `daily`). |
+
+## Response
+
+Each entry matches the `Series` type exported by the SDK, containing fields such as `title`,
+`seriesType`, `tags`, `chats`, and nested `events` arrays.
+
+## Usage example
+
+```ts
+const dailySeries = await client.gamma.series.listSeries({ recurrence: "daily", limit: 5 });
+
+console.log(dailySeries.map((entry) => entry.title));
+```
+
+## Failure modes
+
+- Empty array filters (e.g., `slug: []`) trigger validation errors.
+- HTTP/network failures propagate per the [architecture contract](/architecture#error-handling-contract).

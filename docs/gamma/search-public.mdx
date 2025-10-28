@@ -1,0 +1,65 @@
+---
+title: "Public Search"
+description: "Perform full-text search across events, tags, and profiles via gamma.search.publicSearch."
+---
+
+`client.gamma.search.publicSearch` powers discovery in the Polymarket app. Query events, tags, and
+user profiles with sophisticated filters.
+
+## Request
+
+```ts
+const results = await client.gamma.search.publicSearch(params);
+```
+
+### Parameters
+
+| Name                  | Type           | Required | Default | Notes                                 |
+| --------------------- | -------------- | -------- | ------- | ------------------------------------- |
+| `q`                   | `string`       | ✅       | –       | Query string.                         |
+| `cache`               | `boolean`      |          | –       | Enable cached responses.              |
+| `events_status`       | `string`       |          | –       | Filter events by status.              |
+| `limit_per_type`      | `number` (≥ 0) |          | –       | Result cap per section.               |
+| `page`                | `number` (≥ 0) |          | –       | Pagination control.                   |
+| `events_tag`          | `string[]`     |          | –       | Include events with these tag slugs.  |
+| `keep_closed_markets` | `number` (≥ 0) |          | –       | Retain closed markets.                |
+| `sort`                | `string`       |          | –       | Sorting expression.                   |
+| `ascending`           | `boolean`      |          | –       | Sort direction.                       |
+| `search_tags`         | `boolean`      |          | –       | Toggle tag section.                   |
+| `search_profiles`     | `boolean`      |          | –       | Toggle profile section.               |
+| `recurrence`          | `string`       |          | –       | Filter by recurrence (e.g., `daily`). |
+| `exclude_tag_id`      | `number[]`     |          | –       | Tag IDs to exclude.                   |
+| `optimized`           | `boolean`      |          | –       | Request optimised payload.            |
+
+## Response
+
+```ts
+type SearchResponse = {
+  events: Event[] | null | undefined;
+  tags: Tag[] | null | undefined;
+  profiles: Profile[] | null | undefined;
+  pagination: { hasMore: boolean; totalResults: number };
+};
+```
+
+Each section contains rich metadata—titles, imagery, volume stats, chat info, and more. Check for
+`null`/`undefined` before iterating.
+
+## Usage example
+
+```ts
+const search = await client.gamma.search.publicSearch({
+  q: "election",
+  search_tags: true,
+  search_profiles: true,
+  limit_per_type: 10,
+});
+
+console.log(search.events?.map((event) => event.title));
+```
+
+## Failure modes
+
+- Missing `q` → validation error.
+- Negative pagination values → validation error.
+- HTTP/network failures propagate per the [architecture contract](/architecture#error-handling-contract).

@@ -1,0 +1,42 @@
+---
+title: "Event by ID"
+description: "Retrieve detailed event metadata, chats, and nested markets via gamma.events.getEventById."
+---
+
+`client.gamma.events.getEventById` fetches a single event with extensive metadata—market snapshots,
+volume metrics, imagery, chat details, and template information.
+
+## Request
+
+```ts
+const event = await client.gamma.events.getEventById(id, params);
+```
+
+### Parameters
+
+| Name               | Type           | Required | Notes                      |
+| ------------------ | -------------- | -------- | -------------------------- |
+| `id`               | `number` (≥ 0) | ✅       | Event ID.                  |
+| `include_chat`     | `boolean`      |          | Include chat metadata.     |
+| `include_template` | `boolean`      |          | Include template metadata. |
+
+## Response
+
+The API returns a single `Event` object. Fields match those surfaced by the Polymarket app: titles,
+descriptions, imagery, liquidity/volume metrics, nested markets, tags, chat rooms, and more.
+
+## Usage example
+
+```ts
+const event = await client.gamma.events.getEventById(35723, {
+  include_chat: true,
+  include_template: true,
+});
+
+console.log(event.title, event.markets?.length);
+```
+
+## Failure modes
+
+- `id` must be numeric.
+- HTTP/network failures propagate per the [architecture contract](/architecture#error-handling-contract).

@@ -1,0 +1,83 @@
+---
+title: "Introduction"
+description: "Welcome to polymarket-data, the community TypeScript SDK for Polymarket APIs."
+---
+
+Welcome to **polymarket-data**, the community-maintained TypeScript SDK for Polymarket’s public
+APIs.
+
+> This SDK is built by independent contributors and is **not officially affiliated with the
+> Polymarket team**. Always validate behaviour against Polymarket’s public documentation before
+> deploying production systems.
+
+<Columns cols={2}>
+  <Card title="Quickstart" icon="rocket" href="/quickstart">
+    Install the SDK, configure endpoints, and run your first health check.
+  </Card>
+  <Card title="Architecture" icon="sitemap" href="/architecture">
+    Understand the dual-client design, validation strategy, and error handling.
+  </Card>
+</Columns>
+
+---
+
+## What’s in the box?
+
+<Columns cols={2}>
+  <Card title="Strong Typing" icon="shield-check">
+    Every request/response is validated with Zod for runtime and IDE safety.
+  </Card>
+  <Card title="Live Examples" icon="code">
+    Examples are exercised against the live Polymarket APIs for accuracy.
+  </Card>
+</Columns>
+
+---
+
+## Conceptual Diagram
+
+```mermaid
+flowchart TD
+  A[Polymarket APIs]
+
+  %% Core data endpoints
+  A -->|Data Endpoint| D[Core Data APIs]
+  A -->|Data Endpoint| M[Misc Data APIs]
+  A -->|Data Endpoint| H[Health Check]
+
+  %% Gamma section
+  A -->|Gamma Endpoint| G[Gamma APIs]
+
+  %% Gamma submodules
+  G --> GM[Markets]
+  G --> GE[Events]
+  G --> GR[Series]
+  G --> GC[Comments]
+  G --> GS[Sports]
+  G --> GQ[Search]
+
+  %% Style tweaks
+  classDef main fill:#151b28,stroke:#7ab2f8,stroke-width:1px,color:#fff;
+  classDef sub fill:#212d40,stroke:#7ab2f8,stroke-width:0.5px,color:#fff;
+  class A main;
+  class D,H,M,G,GM,GE,GR,GC,GS,GQ sub;
+
+```
+
+The `Polymarket` constructor spins up **two** HTTP clients, one targeting the data endpoint and one
+for the gamma endpoint. Each method inherits common validation and error handling layers.
+
+---
+
+## Ready to build?
+
+<Columns cols={2}>
+  <Card title="Data API" icon="database" href="/data/index">
+    Positions, trades, activity, holders, and value analytics.
+  </Card>
+  <Card title="Gamma API" icon="radar" href="/gamma/index">
+    Search, comments, series, markets, and events intelligence.
+  </Card>
+</Columns>
+
+Happy building—and thanks for contributing to the broader Polymarket ecosystem.

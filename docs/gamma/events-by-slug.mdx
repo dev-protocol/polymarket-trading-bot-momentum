@@ -1,0 +1,41 @@
+---
+title: "Event by Slug"
+description: "Retrieve an event using its slug via gamma.events.getEventBySlug."
+---
+
+`client.gamma.events.getEventBySlug` fetches the same rich event payload as `getEventById`, using the
+human-readable slug.
+
+## Request
+
+```ts
+const event = await client.gamma.events.getEventBySlug(slug, params);
+```
+
+### Parameters
+
+| Name               | Type      | Required | Notes                                                                |
+| ------------------ | --------- | -------- | -------------------------------------------------------------------- |
+| `slug`             | `string`  | ✅       | Event slug (e.g., `"chile-presidential-election-1st-round-winner"`). |
+| `include_chat`     | `boolean` |          | Include chat metadata.                                               |
+| `include_template` | `boolean` |          | Include template metadata.                                           |
+
+## Response
+
+A single `Event` object identical to [`Event by ID`](/gamma/events-by-id).
+
+## Usage example
+
+```ts
+const event = await client.gamma.events.getEventBySlug(
+  "chile-presidential-election-1st-round-winner",
+  { include_chat: true },
+);
+
+console.log(event.title);
+```
+
+## Failure modes
+
+- `slug` must be a non-empty string.
+- HTTP/network failures propagate per the [architecture contract](/architecture#error-handling-contract).

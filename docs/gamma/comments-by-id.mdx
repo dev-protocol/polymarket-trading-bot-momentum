@@ -1,0 +1,37 @@
+---
+title: "Comment Thread by ID"
+description: "Retrieve a specific comment thread via gamma.comments.getCommentById."
+---
+
+`client.gamma.comments.getCommentById` fetches the root comment and its replies for the supplied ID.
+
+## Request
+
+```ts
+const thread = await client.gamma.comments.getCommentById(id, params);
+```
+
+### Parameters
+
+| Name            | Type           | Required | Notes                                  |
+| --------------- | -------------- | -------- | -------------------------------------- |
+| `id`            | `number` (≥ 0) | ✅       | Comment ID.                            |
+| `get_positions` | `boolean`      |          | Include position data within profiles. |
+
+## Response
+
+An array of `Comment` objects identical to [`List Comments`](/gamma/comments-list). The first element
+is the root comment.
+
+## Usage example
+
+```ts
+const thread = await client.gamma.comments.getCommentById(1975918, { get_positions: true });
+
+console.log(thread[0]?.body);
+```
+
+## Failure modes
+
+- `id` must be numeric.
+- HTTP/network failures propagate per the [architecture contract](/architecture#error-handling-contract).
