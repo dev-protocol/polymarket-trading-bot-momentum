@@ -112,18 +112,3 @@ npm run test:integration # Live API tests
 
 Integration tests require network access and hit the real Polymarket endpoints. Skip them when
 running offline or inject a mocked `fetch`.
-
----
-
-## Documentation & Support
-
-Full documentation is available at **[polymarket-data.com](https://polymarket-data.com)**. It
-includes quickstarts, architecture notes, Data/Gamma endpoint guides, testing workflows, and FAQ.
-
-For questions or contributions:
-
-- Open an issue or feature request in this repository.
-- Share reproducible payloads and stack traces when reporting bugs.
-- Review the docs’ contribution guidelines before submitting PRs.
-
-Happy building!
