@@ -1,8 +1,10 @@
 # Polymarket Trading Bot — RSI, MACD & Momentum
 
+### built by Polymarket dev team (@sherrbss @suhailkakar)
+#### Please give us feedback!
+
 **Polymarket trading bot** for 15-minute Up/Down markets using RSI, MACD, and Momentum. Open-source Polymarket bot with simulation and live trading. Use the Polymarket API (Gamma + CLOB) to automate prediction market trading.
 
-### built by https://github.com/sherrbss - polymarket dev team (please give us feedback)
 
 ---
 
